@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
 import os
-import sys
 
 # --- ETAPA 1: RECOLECCIÓN (Definición de rutas) ---
 # Nombres de los archivos de entrada (los datos "sucios")
-# Asegúrate de que estos 3 archivos estén en la misma carpeta que este script
 ARCHIVOS_ENTRADA = {
     'amazon': 'Amazon Sale Report.csv',
     'intl': 'International sale Report.csv',
@@ -174,7 +172,7 @@ def cargar_datos_limpios(df, nombre_archivo_limpio):
         return
         
     try:
-        ruta_salida = os.path.join(os.getcwd(), nombre_archivo_limpio)
+        ruta_salida = os.path.join(os.getcwd(), 'cleaned_data', nombre_archivo_limpio)
         # index=False evita que se guarde el índice de pandas como una columna
         # encoding='utf-8-sig' es robusto para compatibilidad con Excel
         df.to_csv(ruta_salida, index=False, encoding='utf-8-sig')
@@ -211,7 +209,6 @@ def main():
     separador("PIPELINE ETL COMPLETADO")
     print("Se han generado 3 nuevos archivos CSV con los datos limpios en tu carpeta.")
 
-# Esta línea estándar de Python asegura que la función main()
 # solo se ejecute cuando corres el script directamente.
 if __name__ == "__main__":
     main()
