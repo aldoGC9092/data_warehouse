@@ -170,9 +170,13 @@ def cargar_datos_limpios(df, nombre_archivo_limpio):
     if df is None:
         print(f"[ERROR] No se pudo guardar '{nombre_archivo_limpio}' porque el DataFrame está vacío (None).")
         return
+    
+    directorio_salida = os.path.join(os.getcwd(), 'cleaned_data')
+    # Crea la carpeta si no existe
+    os.makedirs(directorio_salida, exist_ok=True)
         
     try:
-        ruta_salida = os.path.join(os.getcwd(), 'cleaned_data', nombre_archivo_limpio)
+        ruta_salida = os.path.join(directorio_salida, nombre_archivo_limpio)
         # index=False evita que se guarde el índice de pandas como una columna
         # encoding='utf-8-sig' es robusto para compatibilidad con Excel
         df.to_csv(ruta_salida, index=False, encoding='utf-8-sig')
