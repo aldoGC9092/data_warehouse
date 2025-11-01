@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETL - Subir Archivo</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1e40af;
+            --background: #f9fafb;
+            --border: #e5e7eb;
+            --text: #111827;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .upload-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .upload-container:hover {
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        input[type="submit"] {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--primary-hover);
+        }
+
+        footer {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body>
+    <div class="upload-container">
+        <h1>Subir archivo ETL</h1>
+        <form action="/api/subir" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <input type="submit" value="Subir archivo">
+        </form>
+        <footer>Formato permitido: .csv</footer>
+    </div>
+
+    <div class="upload-container">
+        <h2>Registros ETL</h2>
+        {% if registros|length == 0 %}
+        <p>No hay procesos aún.</p>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Archivo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in registros %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.filename }}</td>
+                    <td>{{ r.status }}</td>
+                    <td>
+
+                        <form style="display:inline" action="/api/run_etl/{{ r.id }}" method="post">
+                            <button class="btn">Ejecutar ETL</button>
+                        </form>
+
+                        <form style="display:inline" action="/api/save_cleaned/{{ r.id }}" method="post">
+                            <button class="btn">Guardar limpio</button>
+                        </form>
+
+                        <a class="btn" href="/api/estado/{{ r.id }}">Ver detalles</a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>
