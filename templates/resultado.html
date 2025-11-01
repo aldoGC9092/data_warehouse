@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado ETL</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1e40af;
+            --background: #f9fafb;
+            --border: #e5e7eb;
+            --text: #111827;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .result-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        h2 {
+            color: var(--success);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+            margin: 0.5rem 0;
+            line-height: 1.5;
+        }
+
+        strong {
+            color: var(--primary-hover);
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        a:hover {
+            background-color: var(--primary-hover);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="result-container">
+        <h2>ETL Finalizado</h2>
+        <p><strong>ID del proceso:</strong> {{ id }}</p>
+        <p><strong>Mensaje:</strong> {{ mensaje }}</p>
+        <p><strong>Filas transformadas:</strong> {{ filas }}</p>
+        <p><strong>Errores:</strong> {{ errores }}</p>
+        <a href="/">Regresar al inicio</a>
+    </div>
+</body>
+
+</html>

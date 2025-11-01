@@ -7,7 +7,7 @@ import os
 ARCHIVOS_ENTRADA = {
     'amazon': 'Amazon Sale Report.csv',
     'intl': 'International sale Report.csv',
-    'pl': 'P_L_March 2021.csv'
+    'pl': 'P L March 2021.csv'
 }
 
 # Nombres para los archivos de salida (los datos "limpios")
@@ -171,7 +171,7 @@ def cargar_datos_limpios(df, nombre_archivo_limpio):
         print(f"[ERROR] No se pudo guardar '{nombre_archivo_limpio}' porque el DataFrame está vacío (None).")
         return
     
-    directorio_salida = os.path.join(os.getcwd(), 'cleaned_data')
+    directorio_salida = os.path.join(os.getcwd(), 'clean_data')
     # Crea la carpeta si no existe
     os.makedirs(directorio_salida, exist_ok=True)
         
