@@ -12,7 +12,6 @@ def separador(titulo):
     print("="*80 + "\n")
 
 # --- Función de Análisis de Outliers (Valores Atípicos) ---
-# (Rango Intercuartílico)
 def analizar_outliers_iqr(df, columna):
     if not pd.api.types.is_numeric_dtype(df[columna]):
         print(f"-> HALLAZGO: La columna '{columna}' es de tipo '{df[columna].dtype}' (texto).")

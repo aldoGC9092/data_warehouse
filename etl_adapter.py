@@ -31,11 +31,11 @@ def ejecutar_etl_desde_api(filepath: str):
             "filas_transformadas": 0
         }
 
-    cargar_datos_limpios(df_limpio, nombre_salida)
-
     return {
-        "estado": "completado",
+        "estado": "etl completado",
         "mensaje": f"Transformación exitosa: {nombre_salida}",
         "errores": 0,
-        "filas_transformadas": len(df_limpio)
+        "filas_transformadas": len(df_limpio),
+        "salida": nombre_salida,
+        "datos_limpios": df_limpio
     }

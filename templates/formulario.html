@@ -76,6 +76,23 @@
             font-size: 0.875rem;
             color: #6b7280;
         }
+
+        table {
+            border-collapse: collapse;
+            width: 100%
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer
+        }
     </style>
 </head>
 
@@ -88,6 +105,47 @@
         </form>
         <footer>Formato permitido: .csv</footer>
     </div>
+
+    <div class="upload-container">
+        <h2>Registros ETL</h2>
+        {% if registros|length == 0 %}
+        <p>No hay procesos aún.</p>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Archivo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in registros %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.filename }}</td>
+                    <td>{{ r.status }}</td>
+                    <td>
+
+                        <form style="display:inline" action="/api/run_etl/{{ r.id }}" method="post">
+                            <button class="btn">Ejecutar ETL</button>
+                        </form>
+
+                        <form style="display:inline" action="/api/save_cleaned/{{ r.id }}" method="post">
+                            <button class="btn">Guardar limpio</button>
+                        </form>
+
+                        <a class="btn" href="/api/estado/{{ r.id }}">Ver detalles</a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
 </body>
 
 </html>

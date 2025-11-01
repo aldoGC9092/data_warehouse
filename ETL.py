@@ -184,7 +184,7 @@ def cargar_datos_limpios(df, nombre_archivo_limpio):
     except Exception as e:
         print(f"[ERROR] al guardar el archivo '{nombre_archivo_limpio}': {e}")
 
-# --- Orquestador Principal del Pipeline ---
+# --- Ejecucion del Pipeline ---
 def main():
     """
     Función principal que orquesta todo el proceso ETL.
