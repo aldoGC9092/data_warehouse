@@ -1,5 +1,6 @@
-# Ignore virtual environments
 .venv/
 venv/
-cleaned_data/
+data/
+clean_data/
+__pycache__/
 ENV/
