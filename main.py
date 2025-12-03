@@ -4,6 +4,8 @@ from uuid import uuid4
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+
 
 from etl_adapter import ejecutar_etl_desde_api
 from etl import cargar_datos_limpios
@@ -13,6 +15,7 @@ etl_registry = {}
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/reports", StaticFiles(directory="reports"), name="reports")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -198,9 +201,25 @@ async def get_ml_results(id_proceso: str):
 async def view_ml_results(request: Request, id_proceso: str):
     registro = etl_registry.get(id_proceso)
     if not registro or "ml_results" not in registro:
-        return templates.TemplateResponse("ml_results.html", {"request": request, "id_proceso": id_proceso, "metrics": {}, "winner": "no disponible"})
+        return templates.TemplateResponse(
+            "ml_results.html",
+            {"request": request, "id_proceso": id_proceso, "metrics": {}, "winner": "no disponible", "figures": {}}
+        )
     ml = registro["ml_results"]
-    return templates.TemplateResponse("ml_results.html", {"request": request, "id_proceso": id_proceso, "metrics": ml["metrics"], "winner": ml["winner"]})
+
+    # Normalizar las rutas (cambiar backslashes por slashes)
+    figures = {k: v.replace("\\", "/") for k, v in ml.get("figures", {}).items()}
+
+    return templates.TemplateResponse(
+        "ml_results.html",
+        {
+            "request": request,
+            "id_proceso": id_proceso,
+            "metrics": ml["metrics"],
+            "winner": ml["winner"],
+            "figures": figures
+        }
+    )
 
 if __name__ == '__main__':
     uvicorn.run("main:app", host="localhost", port=8000, reload=True)

@@ -1,36 +1,88 @@
 <!-- templates/ml_results.html -->
 <!doctype html>
-<html>
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>ML Results</title>
+    <title>Resultados ML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .winner {
+            background: #27ae60;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        ul.metrics {
+            list-style: none;
+            padding: 0;
+        }
+        ul.metrics li {
+            background: #ecf0f1;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        .graphs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .graph-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .graph-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+    </style>
 </head>
-
 <body>
     <h1>Resultados ML para proceso {{ id_proceso }}</h1>
-    <h2>Ganador: {{ winner }}</h2>
+    <h2>Ganador: <span class="winner">{{ winner }}</span></h2>
 
     <h3>Métricas</h3>
-    <ul>
+    <ul class="metrics">
         {% for model, metrics in metrics.items() %}
-        <li><strong>{{ model }}</strong>: RMSE={{ metrics.rmse }}, MAE={{ metrics.mae }}, R2={{ metrics.r2 }}</li>
+        <li>
+            <strong>{{ model }}</strong><br>
+            RMSE = {{ metrics.rmse }}<br>
+            MAE = {{ metrics.mae }}<br>
+            R² = {{ metrics.r2 }}
+        </li>
         {% endfor %}
     </ul>
 
     <h3>Gráficas</h3>
-    <div>
-        <h4>Comparación RMSE</h4>
-        <img src="../reports/{{ id_proceso }}/rmse_comparison" alt="RMSE comparison" />
-    </div>
-    <div>
-        <h4>Residuals (ganador)</h4>
-        <img src="../reports/{{ id_proceso }}/residuals_winner" alt="Residuals" />
-    </div>
-    <div>
-        <h4>Predicho vs Real (ganador)</h4>
-        <img src="../reports/{{ id_proceso }}/pred_vs_real_winner" alt="Pred vs Real" />
+    <div class="graphs">
+        <div class="graph-card">
+            <h4>Comparación RMSE</h4>
+            <img src="/{{ figures.rmse_comparison }}" alt="RMSE comparison" />
+        </div>
+        <div class="graph-card">
+            <h4>Residuals (ganador)</h4>
+            <img src="/{{ figures.residuals_winner }}" alt="Residuals" />
+        </div>
+        <div class="graph-card">
+            <h4>Predicho vs Real (ganador)</h4>
+            <img src="/{{ figures.pred_vs_real_winner }}" alt="Pred vs Real" />
+        </div>
     </div>
 </body>
-
 </html>
