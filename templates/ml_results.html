@@ -51,6 +51,19 @@
             border-radius: 4px;
             margin-top: 0.5rem;
         }
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.7rem 1.2rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -84,5 +97,8 @@
             <img src="/{{ figures.pred_vs_real_winner }}" alt="Pred vs Real" />
         </div>
     </div>
+
+    <!-- Botón de navegación -->
+    <a href="/" class="nav-button">Volver al inicio</a>
 </body>
 </html>
