@@ -136,6 +136,12 @@
                             <button class="btn">Guardar limpio</button>
                         </form>
 
+                        <form style="display:inline" action="/api/train/{{ r.id }}?target_col=Amount" method="post">
+                            <button class="btn">Ejecutar DM</button>
+                        </form>
+
+                        <a class="btn" href="/ml/view/{{ r.id }}">Ver DM</a>
+
                         <a class="btn" href="/api/estado/{{ r.id }}">Ver detalles</a>
 
                     </td>

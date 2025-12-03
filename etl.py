@@ -181,6 +181,7 @@ def cargar_datos_limpios(df, nombre_archivo_limpio):
         # encoding='utf-8-sig' es robusto para compatibilidad con Excel
         df.to_csv(ruta_salida, index=False, encoding='utf-8-sig')
         print(f"[OK] ¡Datos limpios guardados exitosamente en '{nombre_archivo_limpio}'!")
+        return ruta_salida
     except Exception as e:
         print(f"[ERROR] al guardar el archivo '{nombre_archivo_limpio}': {e}")
 

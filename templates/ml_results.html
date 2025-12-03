@@ -1,0 +1,36 @@
+<!-- templates/ml_results.html -->
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ML Results</title>
+</head>
+
+<body>
+    <h1>Resultados ML para proceso {{ id_proceso }}</h1>
+    <h2>Ganador: {{ winner }}</h2>
+
+    <h3>Métricas</h3>
+    <ul>
+        {% for model, metrics in metrics.items() %}
+        <li><strong>{{ model }}</strong>: RMSE={{ metrics.rmse }}, MAE={{ metrics.mae }}, R2={{ metrics.r2 }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Gráficas</h3>
+    <div>
+        <h4>Comparación RMSE</h4>
+        <img src="../reports/{{ id_proceso }}/rmse_comparison" alt="RMSE comparison" />
+    </div>
+    <div>
+        <h4>Residuals (ganador)</h4>
+        <img src="../reports/{{ id_proceso }}/residuals_winner" alt="Residuals" />
+    </div>
+    <div>
+        <h4>Predicho vs Real (ganador)</h4>
+        <img src="../reports/{{ id_proceso }}/pred_vs_real_winner" alt="Pred vs Real" />
+    </div>
+</body>
+
+</html>
