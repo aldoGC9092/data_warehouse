@@ -194,16 +194,77 @@
             background: #ef4444;
         }
 
+        .s-ml_completed {
+            background: #8b5cf6;
+        }
+
         .s-unknown {
             background: #6b7280;
+        }
+
+        #notif-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+        }
+
+        .notif {
+            padding: 1rem 1.4rem;
+            border-radius: 0.75rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .notif-success {
+            background: var(--secondary);
+        }
+
+        .notif-error {
+            background: var(--danger);
+        }
+
+        .notif-warning {
+            background: var(--warning);
+        }
+
+        .notif-info {
+            background: var(--primary);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff80;
+            border-top-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
 <body>
+    <div id="notif-container"></div>
 
     <div class="layout">
-        <h1>⚙️ Panel ETL – Administración de Archivos</h1>
+        <h1>Administración de Archivos</h1>
 
         <div class="grid">
 
@@ -249,20 +310,20 @@
 
                             <td style="white-space: nowrap">
 
-                                <form style="display:inline" action="/api/run_etl/{{ r.id }}" method="post">
-                                    <button class="btn btn-etl">Ejecutar ETL</button>
-                                </form>
+                                <button class="btn btn-etl" onclick="callApi('/api/run_etl/{{ r.id }}')">Ejecutar
+                                    ETL</button>
 
-                                <form style="display:inline" action="/api/save_cleaned/{{ r.id }}" method="post">
-                                    <button class="btn btn-save">Guardar limpio</button>
-                                </form>
+                                <button class="btn btn-save" onclick="callApi('/api/save_cleaned/{{ r.id }}')">Guardar
+                                    limpio</button>
 
-                                <form style="display:inline" action="/api/train/{{ r.id }}?target_col=Amount"
-                                    method="post">
-                                    <button class="btn btn-dm">Ejecutar DM</button>
-                                </form>
+                                <button class="btn btn-dm"
+                                    onclick="callApi('/api/train/{{ r.id }}?target_col=Amount')">Entrenar
+                                    modelos</button>
 
-                                <a class="btn btn-view" href="/ml/view/{{ r.id }}">Ver DM</a>
+                                <button class="btn btn-view" onclick="viewMl('{{ r.id }}', '{{ r.status }}')">
+                                    Ver mineria
+                                </button>
+
                                 <a class="btn btn-info" href="/api/estado/{{ r.id }}">Detalles</a>
 
                             </td>
@@ -276,6 +337,86 @@
         </div>
     </div>
 
+    <script>
+        function notify(message, type = "info", persistent = false) {
+            const cont = document.getElementById("notif-container");
+            const div = document.createElement("div");
+            div.className = `notif notif-${type}`;
+
+            // Spinner si es notificación de proceso
+            if (persistent) {
+                div.innerHTML = `
+                    <span class="loader"></span>
+                    <span style="margin-left: 8px;">${message}</span>
+                `;
+            } else {
+                div.textContent = message;
+            }
+
+            cont.appendChild(div);
+
+            // Si no debe persistir, lo autodestruimos
+            if (!persistent) {
+                setTimeout(() => {
+                    div.style.opacity = "0";
+                    setTimeout(() => div.remove(), 500);
+                }, 3000);
+            }
+
+            return div; // Devolvemos el elemento para poder borrarlo
+        }
+
+        async function callApi(url) {
+            const loadingNotify = notify("Procesando...", "info", true);
+
+            try {
+                const resp = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: "{}"
+                });
+
+                const data = await resp.json();
+
+                // Eliminar notificación persistente
+                loadingNotify.remove();
+
+                if (data.status === "error") {
+                    notify(data.error || data.message || "Error desconocido", "error");
+                    return;
+                }
+
+                if (data.status === "warning") {
+                    notify(data.message, "warning");
+                    return;
+                }
+
+                if (data.status === "success") {
+                    notify(data.message || "Operación exitosa", "success");
+
+                    if (data.redirect) {
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 800);
+                    }
+                }
+
+            } catch (err) {
+                loadingNotify.remove();
+                notify("Error inesperado: " + err, "error");
+            }
+        }
+
+        function viewMl(id, status) {
+            if (status !== "ml_completed") {
+                notify("La minería de datos aún no está lista.", "error");
+                return;
+            }
+
+            // Si está listo, navegar normalmente
+            window.location.href = `/ml/view/${id}`;
+        }
+    </script>
 </body>
 
 </html>
