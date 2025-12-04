@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from etl import transformar_amazon, transformar_intl, transformar_pl, cargar_datos_limpios
+from etl import transformar_amazon, transformar_intl, transformar_pl
 
 def ejecutar_etl_desde_api(filepath: str):
     nombre = os.path.basename(filepath).lower()

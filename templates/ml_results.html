@@ -1,0 +1,118 @@
+<!-- templates/ml_results.html -->
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Resultados ML</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f9f9f9; color: #333; }
+        h1, h2, h3 { color: #2c3e50; }
+        .winner { background: #27ae60; color: white; padding: 0.5rem 1rem; border-radius: 5px; }
+        ul.metrics { list-style: none; padding: 0; }
+        ul.metrics li { background: #ecf0f1; margin: 0.5rem 0; padding: 0.5rem; border-radius: 4px; }
+        .graphs { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .graph-card { background: white; border: 1px solid #ddd; border-radius: 6px; padding: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .graph-card img { max-width: 100%; height: auto; border-radius: 4px; margin-top: 0.5rem; }
+        .explanation { font-size: 0.9rem; color: #555; margin-top: 0.5rem; }
+        .analysis { margin-top: 2rem; padding: 1rem; background: #eafaf1; border-left: 4px solid #27ae60; }
+        .objective { margin-top: 2rem; padding: 1rem; background: #fef9e7; border-left: 4px solid #f1c40f; }
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.7rem 1.2rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Resultados ML para proceso {{ id_proceso }}</h1>
+    <h2>Ganador: <span class="winner">{{ winner }}</span></h2>
+
+    <h3>Métricas</h3>
+    <ul class="metrics">
+        {% for model, metrics in metrics.items() %}
+        <li>
+            <strong>{{ model }}</strong><br>
+            RMSE = {{ metrics.rmse }}<br>
+            MAE = {{ metrics.mae }}<br>
+            R² = {{ metrics.r2 }}
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="objective">
+        <p>
+            El objetivo de este proyecto es <strong>predicción de ventas</strong> para apoyar la reducción de costos.
+            El modelo ganador, {{ winner }}, permite anticipar la demanda con alta precisión.
+            Esto ayuda a:
+        </p>
+        <ul>
+            <li>Optimizar inventarios y evitar sobreproducción.</li>
+            <li>Reducir costos de almacenamiento y logística.</li>
+            <li>Planificar promociones y estrategias de ventas basadas en datos confiables.</li>
+        </ul>
+        <p>
+            En conclusión, las métricas y gráficas confirman que el modelo seleccionado no solo es técnicamente sólido,
+            sino que también cumple con el objetivo de la minería de datos: transformar los reportes de ventas en
+            decisiones estratégicas que reducen costos y mejoran la eficiencia.
+        </p>
+    </div>
+
+    <h3>Gráficas</h3>
+    <div class="graphs">
+        <div class="graph-card">
+            <h4>Comparación RMSE</h4>
+            <img src="/{{ figures.rmse_comparison }}" alt="RMSE comparison" />
+            <p class="explanation">Esta gráfica compara el error cuadrático medio de cada modelo. El modelo con menor barra es el más preciso.</p>
+            <p class="explanation">
+                En este caso, {% set best_rmse = metrics[winner].rmse %}
+                el modelo ganador tiene un RMSE de {{ best_rmse }},
+                significativamente menor que los demás, lo que confirma su superioridad en precisión.
+            </p>
+        </div>
+        <div class="graph-card">
+            <h4>Residuals (ganador)</h4>
+            <img src="/{{ figures.residuals_winner }}" alt="Residuals" />
+            <p class="explanation">Los residuos muestran la diferencia entre valores reales y predichos. Si están centrados en cero y sin patrón, el modelo es consistente.</p>
+            <p class="explanation">
+                Aquí los residuos del modelo {{ winner }} se distribuyen alrededor de cero,
+                lo que indica que sus errores son pequeños y no siguen un patrón sistemático.
+            </p>
+        </div>
+        <div class="graph-card">
+            <h4>Predicho vs Real (ganador)</h4>
+            <img src="/{{ figures.pred_vs_real_winner }}" alt="Pred vs Real" />
+            <p class="explanation">Cada punto representa una predicción frente al valor real. Una buena predicción se alinea cerca de la diagonal.</p>
+            <p class="explanation">
+                En este caso, el modelo {{ winner }} logra un R² de {{ metrics[winner].r2 }},
+                lo que significa que explica aproximadamente el {{ (metrics[winner].r2 * 100)|round(2) }}% de la variabilidad de los datos.
+            </p>
+        </div>
+    </div>
+
+    <div class="analysis">
+        <h3>Análisis del modelo ganador</h3>
+        {% if winner == "LinearRegression" %}
+            <p>El modelo de <strong>Regresión Lineal</strong> fue el más adecuado. Sus métricas muestran un RMSE muy bajo y un R² cercano a 1, lo que significa que explica casi toda la variabilidad de los datos con una relación lineal clara.</p>
+        {% elif winner == "RandomForest" %}
+            <p>El modelo de <strong>Random Forest</strong> resultó ganador. Sus métricas reflejan un RMSE bajo y un R² elevado, lo que indica que captura relaciones no lineales y complejas en los datos con gran precisión.</p>
+        {% elif winner == "GradientBoosting" %}
+            <p>El modelo de <strong>Gradient Boosting</strong> fue el más adecuado. Sus métricas muestran un excelente equilibrio entre bajo error y alto R², lo que confirma su capacidad para corregir errores iterativamente y capturar patrones complejos.</p>
+        {% else %}
+            <p>No se pudo determinar un análisis específico porque el modelo ganador no está identificado.</p>
+        {% endif %}
+    </div>
+
+
+
+    <a href="/" class="nav-button">Volver al inicio</a>
+</body>
+
+</html>
