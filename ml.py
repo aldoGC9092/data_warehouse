@@ -1,4 +1,3 @@
-# ml.py (actualizado para evitar explosion de cardinalidad)
 import os
 import json
 from pathlib import Path
@@ -99,7 +98,7 @@ def train_and_compare_models(csv_path: str, target_col: str="", test_size: float
     elif csv_path.endswith("intl_limpio_api.csv"):
         target_col = "GROSS AMT"
     elif csv_path.endswith("pl_limpio_api.csv"):
-        target_col = "TP 2"    
+        target_col = "TP 2"  
 
     df = pd.read_csv(csv_path)
     if target_col not in df.columns:
