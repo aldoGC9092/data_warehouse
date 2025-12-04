@@ -1,6 +1,5 @@
 .venv/
 venv/
-data/
 clean_data/
 __pycache__/
 ENV/
